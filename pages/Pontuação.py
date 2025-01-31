@@ -23,7 +23,7 @@ def get_team_games(team_abbreviation, season):
         games = gamefinder.get_data_frames()[0]
         return games[games['TEAM_ABBREVIATION'] == team_abbreviation]
     except Exception as e:
-        st.error(f"Erro ao buscar jogos para {team_abbreviation} na temporada {season}: {e}")
+        # st.error(f"Erro ao buscar jogos para {team_abbreviation} na temporada {season}: {e}")
         return pd.DataFrame()
 
 # Função para calcular estatísticas do time
@@ -84,7 +84,7 @@ if team_stats:
 
     # Exibir gráfico de barras
     st.bar_chart(stats_df.set_index("Categoria"))
-# else:
+else:
     st.warning(f"Nenhum dado encontrado para o {nba_teams[team_abbreviation]} na temporada {selected_season}.")
 
 # Processamento dos dados para o gráfico de radar
@@ -142,5 +142,5 @@ if not team_averages_df.empty:
     )
     fig6.update_traces(textposition='top center')
     st.plotly_chart(fig6)
-# else:
+else:
     st.warning("Nenhum dado encontrado para exibir o gráfico de dispersão.")
