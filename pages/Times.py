@@ -41,10 +41,10 @@ def get_games_by_season(season):
         return pd.DataFrame()  # Retorna um DataFrame vazio se houver erro
 
 # Streamlit UI
-st.title("🏀 Dados da NBA - Temporadas 2023-24 e 2024-25")
+st.title("🏀 Lista de Times da NBA")
 
 # Exibir os times organizados por conferência
-st.subheader("Equipes da NBA por Conferência")
+# st.subheader("Equipes da NBA por Conferência")
 
 eastern, western = get_teams_by_conference()
 
