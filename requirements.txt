@@ -1,0 +1,7 @@
+streamlit
+pandas
+plotly_express==0.4.0
+nba_api
+scikit-learn
+numpy
+scipy
