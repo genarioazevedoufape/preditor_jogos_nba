@@ -1,17 +1,17 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
 import plotly.express as px
+import plotly.graph_objects as go
 from nba_api.stats.endpoints import playergamelog, commonplayerinfo
 from datetime import datetime
 
+# Funções auxiliares para conversões
 def convert_height_inches_to_meters(height_inches):
     return round(height_inches * 0.0254, 2)
 
 def convert_weight_pounds_to_kg(weight_pounds):
     return round(weight_pounds * 0.453592, 1)
-
-def format_salary(salary):
-    return f'${salary:,.2f}'
 
 def get_player_data(player_id):
     """Obtém os dados básicos do jogador."""
@@ -19,10 +19,10 @@ def get_player_data(player_id):
     birth_date = datetime.strptime(player_info.loc[0, "BIRTHDATE"], "%Y-%m-%dT%H:%M:%S")
     today = datetime.today()
     idade = today.year - birth_date.year - ((today.month, today.day) < (birth_date.month, birth_date.day))
-    
+
     altura_em_polegadas = float(player_info.loc[0, "HEIGHT"].split('-')[0]) * 12 + float(player_info.loc[0, "HEIGHT"].split('-')[1])
     peso_em_libras = float(player_info.loc[0, "WEIGHT"])
-    
+
     return {
         "ID": player_id,
         "Nome": player_info.loc[0, "DISPLAY_FIRST_LAST"],
@@ -45,45 +45,74 @@ def get_game_log(player_id, season='2023-24'):
         "PTS": "Pontos",
         "REB": "Rebotes",
         "AST": "Assistências",
-        "FG3A": "Tentativas de 3PTS",
-        "FG3M": "Cestas de 3PTS",
         "MIN": "Minutos em Quadra"
     })
     log["Casa/Fora"] = log["Adversário"].apply(lambda x: "Casa" if "vs." in x else "Fora")
     log["Adversário"] = log["Adversário"].str.split().str[-1]
     return log
 
-# Configuração da página
-st.set_page_config(page_title="Charlotte Hornets Dashboard", layout="wide")
-st.title("🏀 Charlotte Hornets - Análise de Dados")
+# Função para calcular estatísticas
+def calculate_statistics(df):
+    """Calcula estatísticas relevantes a partir do DataFrame."""
+    statistics = []
+    for column in ["Pontos", "Rebotes", "Assistências"]:
+        statistics.append({
+            "Estatística": column,
+            "Média": round(df[column].mean(), 2),
+            "Mediana": round(df[column].median(), 2),
+            "Moda": int(df[column].mode()[0]),
+            "Desvio Padrão": round(df[column].std(), 2)
+        })
+    return pd.DataFrame(statistics)
 
-# Seleção de jogador dentro da aba
+# Configuração da página
+st.set_page_config(page_title="NBA Player Analysis", layout="wide")
+st.title("🏀 Análise de Jogadores da NBA")
+
+# Seleção de jogador
 player_ids = {"LaMelo Ball": 1630163, "Brandon Miller": 1641706, "Moussa Diabate": 1631217}
-st.subheader("📌 Selecione um jogador para análise")
 player_name = st.selectbox("Escolha um jogador", list(player_ids.keys()))
 player_id = player_ids[player_name]
 
+# Dados do jogador
 dados_jogador = get_player_data(player_id)
-st.subheader(f"📌 Informações de {player_name}")
-st.table(pd.DataFrame([dados_jogador]))
 
+# Organização em colunas para exibir dados do jogador
+st.subheader(f"📌 Informações de {player_name}")
+col1, col2 = st.columns(2)
+with col1:
+    st.table(pd.DataFrame([dados_jogador]))
+
+# Log de jogos
 df_jogos = get_game_log(player_id)
 st.subheader("📊 Estatísticas da Temporada Atual")
-st.dataframe(df_jogos)
+st.dataframe(df_jogos, use_container_width=True)
 
-# Gráficos interativos
-fig_pts = px.line(df_jogos, x="Data do Jogo", y="Pontos", title="Pontos por Jogo", markers=True)
-st.plotly_chart(fig_pts, use_container_width=True)
+# Estatísticas calculadas
+st.subheader("📌 Estatísticas Calculadas")
+estatisticas_df = calculate_statistics(df_jogos)
+st.table(estatisticas_df)
 
-# Definir as colunas específicas para o confronto
-colunas_especificas = ["Data do Jogo", "Casa/Fora", "Vitória/Derrota", "Pontos", "Rebotes", "Assistências", "Tentativas de 3PTS", "Cestas de 3PTS", "Minutos em Quadra"]
+# Gráficos
+st.subheader("📊 Gráficos de Desempenho")
 
-# Escolher um adversário para análise específica
-st.subheader("📌 Selecione um adversário para análise detalhada")
-adversario_selecionado = st.selectbox("Escolha um adversário", df_jogos["Adversário"].unique())
+# Gráfico de distribuição de pontos, rebotes e assistências
+for stat in ["Pontos", "Rebotes", "Assistências"]:
+    fig = px.histogram(df_jogos, x=stat, nbins=10, title=f"Distribuição de {stat}")
+    st.plotly_chart(fig, use_container_width=True)
 
-# Filtrar os jogos contra o adversário escolhido e selecionar apenas as colunas desejadas
-df_partida = df_jogos[df_jogos["Adversário"] == adversario_selecionado][colunas_especificas]
+# Box Plot
+fig_box = go.Figure()
+for stat in ["Pontos", "Rebotes", "Assistências"]:
+    fig_box.add_trace(go.Box(y=df_jogos[stat], name=stat))
+fig_box.update_layout(title="Box Plot - Pontos, Rebotes e Assistências")
+st.plotly_chart(fig_box, use_container_width=True)
 
-st.subheader(f"📌 Jogos contra {adversario_selecionado}")
-st.dataframe(df_partida)
+# Comparação da carreira
+st.subheader("📌 Comparação com a Carreira")
+df_carreira = pd.DataFrame({
+    "Estatísticas": ["Total de Jogos", "Média de Pontos", "Média de Assistências", "Média de Rebotes", "Minutos em Quadra"],
+    "Temporada Atual": [df_jogos.shape[0], df_jogos["Pontos"].mean(), df_jogos["Assistências"].mean(), df_jogos["Rebotes"].mean(), df_jogos["Minutos em Quadra"].mean()],
+    "Carreira": [82, 20, 7, 5, 30]  # Exemplo de valores médios da carreira
+})
+st.table(df_carreira)
