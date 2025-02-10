@@ -55,7 +55,7 @@ def get_game_log(player_id, season='2024-25'):
 
 # Configuração da página
 st.set_page_config(page_title="Charlotte Hornets Dashboard", layout="wide")
-st.title("\U0001F3C0 Charlotte Hornets - Análise de Dados")
+st.title("\U0001F3C0 Charlotte Hornets - Jogadores")
 
 # Seleção de jogador dentro da aba
 player_ids = {"LaMelo Ball": 1630163, "Brandon Miller": 1641706, "Moussa Diabate": 1631217}

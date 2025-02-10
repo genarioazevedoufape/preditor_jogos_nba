@@ -67,7 +67,7 @@ def calculate_statistics(df):
 
 # Configuração da página
 st.set_page_config(page_title="NBA Player Analysis", layout="wide")
-st.title("🏀 Análise de Jogadores da NBA")
+st.title("🏀 Peformances de Jogadores da NBA")
 
 # Seleção de jogador
 player_ids = {"LaMelo Ball": 1630163, "Brandon Miller": 1641706, "Moussa Diabate": 1631217}
