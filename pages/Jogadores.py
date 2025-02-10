@@ -35,7 +35,7 @@ def get_player_data(player_id):
         "Salário": "Não disponível na API"
     }
 
-def get_game_log(player_id, season='2023-24'):
+def get_game_log(player_id, season='2024-25'):
     """Obtém o log de jogos do jogador para a temporada especificada."""
     log = playergamelog.PlayerGameLog(player_id=player_id, season=season).get_data_frames()[0]
     log = log.rename(columns={
@@ -55,20 +55,20 @@ def get_game_log(player_id, season='2023-24'):
 
 # Configuração da página
 st.set_page_config(page_title="Charlotte Hornets Dashboard", layout="wide")
-st.title("🏀 Charlotte Hornets - Análise de Dados")
+st.title("\U0001F3C0 Charlotte Hornets - Análise de Dados")
 
 # Seleção de jogador dentro da aba
 player_ids = {"LaMelo Ball": 1630163, "Brandon Miller": 1641706, "Moussa Diabate": 1631217}
-st.subheader("📌 Selecione um jogador para análise")
+st.subheader("\U0001F4CC Selecione um jogador para análise")
 player_name = st.selectbox("Escolha um jogador", list(player_ids.keys()))
 player_id = player_ids[player_name]
 
 dados_jogador = get_player_data(player_id)
-st.subheader(f"📌 Informações de {player_name}")
+st.subheader(f"\U0001F4CC Informações de {player_name}")
 st.table(pd.DataFrame([dados_jogador]))
 
 df_jogos = get_game_log(player_id)
-st.subheader("📊 Estatísticas da Temporada Atual")
+st.subheader("\U0001F4CA Estatísticas da Temporada Atual")
 st.dataframe(df_jogos)
 
 # Gráficos interativos
@@ -79,11 +79,11 @@ st.plotly_chart(fig_pts, use_container_width=True)
 colunas_especificas = ["Data do Jogo", "Casa/Fora", "Vitória/Derrota", "Pontos", "Rebotes", "Assistências", "Tentativas de 3PTS", "Cestas de 3PTS", "Minutos em Quadra"]
 
 # Escolher um adversário para análise específica
-st.subheader("📌 Selecione um adversário para análise detalhada")
+st.subheader("\U0001F4CC Selecione um adversário para análise detalhada")
 adversario_selecionado = st.selectbox("Escolha um adversário", df_jogos["Adversário"].unique())
 
 # Filtrar os jogos contra o adversário escolhido e selecionar apenas as colunas desejadas
 df_partida = df_jogos[df_jogos["Adversário"] == adversario_selecionado][colunas_especificas]
 
-st.subheader(f"📌 Jogos contra {adversario_selecionado}")
+st.subheader(f"\U0001F4CC Jogos contra {adversario_selecionado}")
 st.dataframe(df_partida)

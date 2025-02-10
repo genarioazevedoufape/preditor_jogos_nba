@@ -35,7 +35,7 @@ def get_player_data(player_id):
         "Salário": "Não disponível na API"
     }
 
-def get_game_log(player_id, season='2023-24'):
+def get_game_log(player_id, season='2024-25'):
     """Obtém o log de jogos do jogador para a temporada especificada."""
     log = playergamelog.PlayerGameLog(player_id=player_id, season=season).get_data_frames()[0]
     log = log.rename(columns={
@@ -79,9 +79,7 @@ dados_jogador = get_player_data(player_id)
 
 # Organização em colunas para exibir dados do jogador
 st.subheader(f"📌 Informações de {player_name}")
-col1, col2 = st.columns(2)
-with col1:
-    st.table(pd.DataFrame([dados_jogador]))
+st.table(pd.DataFrame([dados_jogador]))
 
 # Log de jogos
 df_jogos = get_game_log(player_id)
