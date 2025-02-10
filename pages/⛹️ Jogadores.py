@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 import pandas as pd
 import plotly.express as px
@@ -9,9 +10,6 @@ def convert_height_inches_to_meters(height_inches):
 
 def convert_weight_pounds_to_kg(weight_pounds):
     return round(weight_pounds * 0.453592, 1)
-
-def format_salary(salary):
-    return f'${salary:,.2f}'
 
 def get_player_data(player_id):
     """Obtém os dados básicos do jogador."""
@@ -59,9 +57,19 @@ st.title("\U0001F3C0 Charlotte Hornets - Jogadores")
 
 # Seleção de jogador dentro da aba
 player_ids = {"LaMelo Ball": 1630163, "Brandon Miller": 1641706, "Moussa Diabate": 1631217}
+player_images = {"LaMelo Ball": "img/lamello.png", "Brandon Miller": "img/brandon.png", "Moussa Diabate": "img/moussa.png"}
+
 st.subheader("\U0001F4CC Selecione um jogador para análise")
 player_name = st.selectbox("Escolha um jogador", list(player_ids.keys()))
 player_id = player_ids[player_name]
+
+# Exibir imagem do jogador
+image_path = player_images.get(player_name, None)
+if image_path:
+    if not os.path.exists(image_path):
+        st.error(f"Arquivo não encontrado: {image_path}")
+    else:
+        st.image(image_path, caption=player_name)  # Ocupa toda a largura da coluna
 
 dados_jogador = get_player_data(player_id)
 st.subheader(f"\U0001F4CC Informações de {player_name}")
