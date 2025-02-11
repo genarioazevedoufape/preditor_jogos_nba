@@ -5,6 +5,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 from nba_api.stats.endpoints import playergamelog, commonplayerinfo
 from datetime import datetime
+import os
 
 # Funções auxiliares para conversões
 def convert_height_inches_to_meters(height_inches):
@@ -51,7 +52,6 @@ def get_game_log(player_id, season='2024-25'):
     log["Adversário"] = log["Adversário"].str.split().str[-1]
     return log
 
-# Função para calcular estatísticas
 def calculate_statistics(df):
     """Calcula estatísticas relevantes a partir do DataFrame."""
     statistics = []
@@ -71,13 +71,24 @@ st.title("🏀 Peformances de Jogadores da NBA")
 
 # Seleção de jogador
 player_ids = {"LaMelo Ball": 1630163, "Brandon Miller": 1641706, "Moussa Diabate": 1631217}
+player_images = {
+    "LaMelo Ball": "img/lamello.png",
+    "Brandon Miller": "img/brandon.png",
+    "Moussa Diabate": "img/moussa.png"
+}
+
 player_name = st.selectbox("Escolha um jogador", list(player_ids.keys()))
 player_id = player_ids[player_name]
 
+# Exibir imagem do jogador
+image_path = player_images.get(player_name)
+if image_path and os.path.exists(image_path):
+    st.image(image_path, caption=player_name, width=200)
+else:
+    st.warning(f"Imagem não encontrada para {player_name}")
+
 # Dados do jogador
 dados_jogador = get_player_data(player_id)
-
-# Organização em colunas para exibir dados do jogador
 st.subheader(f"📌 Informações de {player_name}")
 st.table(pd.DataFrame([dados_jogador]))
 

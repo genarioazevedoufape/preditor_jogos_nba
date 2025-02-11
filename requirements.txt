@@ -5,3 +5,4 @@ nba_api
 scikit-learn
 numpy
 scipy
+jupyter
