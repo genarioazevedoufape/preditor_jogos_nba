@@ -79,7 +79,7 @@ Isso abrirá a interface da aplicação no navegador.
   ![💯 Pontuação](img/pontuacao.png)
   ![📈 Modelos Estatísticos](img/modelosestatisticos.png)
   ![📈 Regressão Linear](img/regressaolinear.png)
-  ![📈 Regressão Logistica](img/regressaologistica.png)
+  ![📈 Regressão Logística](img/regressaologistica.png)
   ![🔃 Peformances dos Times](img/performancestimes.png)
   ![🔃 Performances dos Jogadores](img/performancesjogadores.png)
   ![🚩 Vitórias x Derrotas](img/vitoriasxderrotas.png)
