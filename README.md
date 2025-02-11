@@ -67,10 +67,11 @@ Isso abrirá a interface da aplicação no navegador.
 
 ## 📷 Galeria Interativa
 
-<details>
-  <summary>📌 Clique para visualizar</summary>
-  
   ![Charlotte❤️Hornets](img/charllote.png)
+
+<details>
+  <summary>📌 Veja mais</summary>
+  
   ![▶️ Jogos](img/jogos.png)
   ![⛹️ Jogadores](img/jogadores.png)
   ![🏀 Times NBA](img/times.png)
