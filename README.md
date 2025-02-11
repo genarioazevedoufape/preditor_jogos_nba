@@ -77,13 +77,12 @@ Isso abrirá a interface da aplicação no navegador.
   ![🏀 Times NBA](img/times.png)
   ![🏆Classificação](img/classificacao.png)
   ![💯 Pontuação](img/pontuacao.png)
-  ![📈 Previsões](img/previsoes.png)
+  ![📈 Modelos Estatísticos](img/modelosestatisticos.png)
+  ![📈 Regressão Linear](img/regressaolinear.png)
+  ![📈 Regressão Logistica](img/regressaologistica.png)
   ![🔃 Peformances dos Times](img/performancestimes.png)
   ![🔃 Performances dos Jogadores](img/performancesjogadores.png)
   ![🚩 Vitórias x Derrotas](img/vitoriasxderrotas.png)
-
-  
-
 
 </details>
 
